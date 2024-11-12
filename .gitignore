@@ -1,0 +1,14 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+
+# Database and uploads
+*.db
+static/uploads/
+
+# IDE settings (optional)
+.vscode/
+.idea/

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="recipe-details">
+    <h2>{{ recipe[1] }}</h2>
+
+    <!-- Display Recipe Image -->
+    {% if recipe[4] %}
+        <img src="{{ url_for('static', filename='uploads/' ~ recipe[4]) }}" 
+             alt="Recipe Image" 
+             class="responsive-image" 
+             style="width: 300px; border-radius: 8px;">
+    {% endif %}
+
+    <h3>Ingredients</h3>
+    <div>{{ recipe[2] | safe if recipe[2] else "No ingredients available." }}</div>
+
+    <h3>Instructions</h3>
+    <div>{{ recipe[3] | safe if recipe[3] else "No instructions provided." }}</div>
+
+    <!-- Display Average Rating -->
+    <h3>Average Rating: {{ avg_rating }}</h3>
+
+    <!-- Rating Form -->
+    <form action="{{ url_for('rate_recipe', recipe_id=recipe[0]) }}" method="POST">
+        <label for="rating">Rate this recipe (1-5):</label>
+        <input type="number" name="rating" min="1" max="5" required>
+        <button type="submit">Submit Rating</button>
+    </form>
+
+    <!-- Comments Section -->
+    <h3>Comments</h3>
+    {% if comments %}
+        <ul>
+            {% for comment, created_at, username in comments %}
+                <li><strong>{{ username }}</strong> ({{ created_at }}): {{ comment }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No comments yet. Be the first to comment!</p>
+    {% endif %}
+
+    <!-- Comment Form -->
+    <form action="{{ url_for('comment_recipe', recipe_id=recipe[0]) }}" method="POST">
+        <textarea name="comment" rows="3" placeholder="Leave a comment..." required></textarea>
+        <button type="submit">Add Comment</button>
+    </form>
+
+    <!-- Edit Button -->
+    <a href="{{ url_for('edit_recipe', id=recipe[0]) }}" 
+       style="background-color: #4CAF50; color: white; padding: 10px; margin-top: 20px; display: inline-block; text-decoration: none;">
+       Edit Recipe
+    </a>
+
+    <!-- Delete Button with Enhanced Confirmation -->
+    <form action="{{ url_for('delete_recipe', id=recipe[0]) }}" method="POST" 
+          onsubmit="return confirm('Are you sure you want to delete the recipe &quot;{{ recipe[1] }}&quot;?');" 
+          style="display: inline;">
+        <button type="submit" 
+                style="background-color: red; color: white; border: none; padding: 10px; margin-top: 20px; cursor: pointer;">
+            Delete Recipe
+        </button>
+    </form>
+
+    <!-- Back to Home Link -->
+    <a href="{{ url_for('home') }}" 
+       style="display: inline-block; margin-top: 20px; color: #4CAF50; text-decoration: none;">
+       &larr; Back to Home
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Add a New Recipe</h2>
+<form action="{{ url_for('add_recipe') }}" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 20px;">
+
+    <!-- Recipe Title Field -->
+    <label for="title">Recipe Title:</label>
+    <input type="text" name="title" required style="width: 100%; padding: 8px; margin-bottom: 10px;">
+
+    <!-- Ingredients Field with Quill Editor -->
+    <label for="ingredients">Ingredients:</label>
+    <div id="ingredients-editor" style="height: 200px; background-color: #ffffff;"></div>
+    <input type="hidden" name="ingredients" id="ingredients-input">
+
+    <!-- Instructions Field with Quill Editor -->
+    <label for="instructions">Instructions:</label>
+    <div id="instructions-editor" style="height: 200px; background-color: #ffffff;"></div>
+    <input type="hidden" name="instructions" id="instructions-input">
+
+    <!-- Image Upload Field -->
+    <label for="image">Recipe Image:</label>
+    <input type="file" name="image" accept="image/*" required>
+
+    <button type="submit">Add Recipe</button>
+</form>
+
+<!-- Include Quill styles and script -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+<!-- Initialize Quill editors and handle form submission -->
+<script>
+    var ingredientsQuill = new Quill('#ingredients-editor', {
+        theme: 'snow',
+        placeholder: 'Enter ingredients...',
+        modules: {
+            toolbar: [
+                [{ 'list': 'bullet' }, { 'list': 'ordered' }],
+                ['bold', 'italic', 'underline'],
+                [{ 'align': [] }]
+            ]
+        }
+    });
+
+    var instructionsQuill = new Quill('#instructions-editor', {
+        theme: 'snow',
+        placeholder: 'Enter instructions...',
+        modules: {
+            toolbar: [
+                [{ 'list': 'bullet' }, { 'list': 'ordered' }],
+                ['bold', 'italic', 'underline'],
+                [{ 'align': [] }]
+            ]
+        }
+    });
+
+    // Apply initial dark mode styles for Quill editors if dark mode is active on page load
+    const isDarkMode = document.body.classList.contains("dark-mode");
+    const quillBackground = isDarkMode ? "#2d2d2d" : "#ffffff";
+    const quillTextColor = isDarkMode ? "#f4f4f9" : "#333";
+
+    ingredientsQuill.root.style.backgroundColor = quillBackground;
+    ingredientsQuill.root.style.color = quillTextColor;
+    instructionsQuill.root.style.backgroundColor = quillBackground;
+    instructionsQuill.root.style.color = quillTextColor;
+
+    // Ensure Quill content is submitted in form
+    document.querySelector('form').onsubmit = function() {
+        document.querySelector('#ingredients-input').value = ingredientsQuill.root.innerHTML;
+        document.querySelector('#instructions-input').value = instructionsQuill.root.innerHTML;
+    };
+</script>
+{% endblock %}
