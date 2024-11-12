@@ -84,6 +84,7 @@ By default, the app will run on http://127.0.0.1:5000.
 5. **Rate and comment** on other users' recipes.
 
 **Configuration**
+
 You can configure settings like the upload folder and maximum file size in ```app.py```
 ```Python
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
